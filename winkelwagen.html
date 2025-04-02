@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winkelwagen - Commodum Copia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Commodum Copia</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="producten.html">Producten</a></li>
+                <li><a href="winkelwagen.html">Winkelwagen</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="winkelwagen">
+            <h1>Uw Winkelwagen</h1>
+            <div id="winkelwagen-items" class="winkelwagen-items">
+                <!-- Winkelwagenitems worden dynamisch geladen via JavaScript -->
+            </div>
+            <div class="winkelwagen-totaal">
+                <p>Totaal: €<span id="totaal-prijs">0.00</span></p>
+                <button id="betaal-btn" class="btn">Afrekenen</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Commodum Copia. Alle rechten voorbehouden.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
