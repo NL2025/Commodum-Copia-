@@ -53,33 +53,6 @@
             "beschrijving": "Verse biologische bananen",
             "voorraad": 150,
             "afbeelding": "bananen.jpg"
-        },
-        {
-            "id": 7,
-            "naam": "Biologische Wortelen",
-            "prijs": 1.50,
-            "categorie": "Groenten",
-            "beschrijving": "Verse biologische wortelen",
-            "voorraad": 120,
-            "afbeelding": "wortelen.jpg"
-        },
-        {
-            "id": 8,
-            "naam": "Biologische Aardbeien",
-            "prijs": 3.95,
-            "categorie": "Fruit",
-            "beschrijving": "Zoete biologische aardbeien",
-            "voorraad": 60,
-            "afbeelding": "aardbeien.jpg"
-        },
-        {
-            "id": 9,
-            "naam": "Biologische Spinazie",
-            "prijs": 2.20,
-            "categorie": "Groenten",
-            "beschrijving": "Verse biologische spinazie",
-            "voorraad": 85,
-            "afbeelding": "spinazie.jpg"
         }
     ]
 }
