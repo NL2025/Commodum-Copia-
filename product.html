@@ -13,7 +13,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="categorieen.html">Categorieën</a></li>
                 <li><a href="producten.html">Producten</a></li>
-                <li><a href="winkelwagen.html">Winkelwagen <span id="cart-count">0</span></a></li>
+                <li><a href="bestelling.html">Bestelling <span id="cart-count">0</span></a></li>
                 <li><a href="login.html" id="login-link">Inloggen</a></li>
             </ul>
         </nav>
@@ -44,7 +44,8 @@
                         <img src="images/${product.afbeelding}" alt="${product.naam}">
                         <h3>${product.naam}</h3>
                         <p>${product.beschrijving}</p>
-                        <strong>€ ${product.prijs}</strong><br><br>
+                        <strong>€ ${product.prijs}</strong>
+                        <br><br>
                         <button onclick="toevoegenAanWinkelwagen(${product.product_id})">Voeg toe aan winkelwagen</button>
                     </div>
                 `;
@@ -69,26 +70,7 @@
             document.getElementById("cart-count").textContent = totaal;
         }
 
-        function bijwerkenLoginStatus() {
-            const gebruiker = localStorage.getItem("gebruiker");
-            const loginLink = document.getElementById("login-link");
-            if (gebruiker) {
-                loginLink.textContent = "Uitloggen";
-                loginLink.href = "#";
-                loginLink.onclick = function () {
-                    localStorage.removeItem("gebruiker");
-                    alert("U bent uitgelogd.");
-                    location.reload();
-                };
-            } else {
-                loginLink.textContent = "Inloggen";
-                loginLink.href = "login.html";
-                loginLink.onclick = null;
-            }
-        }
-
         bijwerkenWinkelwagenTeller();
-        bijwerkenLoginStatus();
     </script>
 </body>
 </html>
