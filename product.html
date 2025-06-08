@@ -46,27 +46,27 @@
                         <p>${product.beschrijving}</p>
                         <strong>€ ${product.prijs}</strong>
                         <br><br>
-                        <button onclick="toevoegenAanWinkelwagen(${product.product_id})">Voeg toe aan winkelwagen</button>
+                        <button onclick="toevoegenAanBestelling(${product.product_id})">Voeg toe aan bestelling</button>
                     </div>
                 `;
             });
 
-        function toevoegenAanWinkelwagen(id) {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            const index = cart.findIndex(p => p.id === id);
+        function toevoegenAanBestelling(id) {
+            let bestelling = JSON.parse(localStorage.getItem("cart")) || [];
+            const index = bestelling.findIndex(p => p.id === id);
             if (index !== -1) {
-                cart[index].aantal++;
+                bestelling[index].aantal++;
             } else {
-                cart.push({ id: id, aantal: 1 });
+                bestelling.push({ id: id, aantal: 1 });
             }
-            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem("cart", JSON.stringify(bestelling));
             bijwerkenWinkelwagenTeller();
-            alert("Product toegevoegd aan winkelwagen!");
+            alert("Product toegevoegd aan bestelling!");
         }
 
         function bijwerkenWinkelwagenTeller() {
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
-            const totaal = cart.reduce((sum, item) => sum + item.aantal, 0);
+            const bestelling = JSON.parse(localStorage.getItem("cart")) || [];
+            const totaal = bestelling.reduce((sum, item) => sum + item.aantal, 0);
             document.getElementById("cart-count").textContent = totaal;
         }
 
