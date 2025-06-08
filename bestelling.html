@@ -1,39 +1,159 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Bestelling - Commodum Copia</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestelling - Commodum Copia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1>Bevestig je Bestelling</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="producten.html">Producten</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <section id="bestelling-overzicht">
-      <h2>Jouw producten:</h2>
-      <ul id="bestel-lijst"></ul>
-      <p><strong>Totaalprijs: € <span id="totaalbedrag">0.00</span></strong></p>
-    </section>
-    <section id="klantgegevens">
-      <h2>Vul je gegevens in:</h2>
-      <form id="bestelformulier">
-        <label>Naam: <input type="text" name="naam" required></label><br>
-        <label>E-mail: <input type="email" name="email" required></label><br>
-        <label>Adres: <input type="text" name="adres" required></label><br>
-        <button type="submit">Bestelling Plaatsen</button>
-      </form>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2025 Commodum Copia</p>
-  </footer>
-  <script src="js/bestelling.js"></script>
+    <header>
+        <h1 class="groene-titel">Uw Bestelling</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="categorieen.html">Categorieën</a></li>
+                <li><a href="producten.html">Producten</a></li>
+                <li><a href="bestelling.html">Bestelling <span id="cart-count">0</span></a></li>
+                <li><a href="login.html" id="login-link">Inloggen</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="winkelwagen">
+            <div id="winkelwagen-items" class="winkelwagen-items">
+                <!-- Winkelwagenitems worden dynamisch geladen via JavaScript -->
+            </div>
+
+            <div class="winkelwagen-totaal">
+                <p><strong>Totaal:</strong> €<span id="totaal-prijs">0.00</span></p>
+                <button id="clear-cart" class="btn secondary-btn">Leegmaken</button>
+                <button id="betaal-btn" class="btn">Afrekenen</button>
+            </div>
+
+            <div id="empty-cart-message" class="empty-cart hidden">
+                <p>Uw winkelwagen is leeg.</p>
+                <a href="producten.html" class="btn">Ga winkelen</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Commodum Copia</p>
+    </footer>
+
+    <script>
+        const itemsContainer = document.getElementById("winkelwagen-items");
+        const totaalPrijsEl = document.getElementById("totaal-prijs");
+        const legeMelding = document.getElementById("empty-cart-message");
+
+        function toonWinkelwagen() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart.length === 0) {
+                legeMelding.classList.remove("hidden");
+                document.querySelector(".winkelwagen-totaal").style.display = "none";
+                return;
+            }
+
+            fetch("data/products.json")
+                .then(response => response.json())
+                .then(data => {
+                    itemsContainer.innerHTML = "";
+                    let totaal = 0;
+
+                    cart.forEach(item => {
+                        const product = data.find(p => p.product_id === item.id);
+                        if (!product) return;
+
+                        const div = document.createElement("div");
+                        div.classList.add("product");
+
+                        const prijs = (item.aantal * parseFloat(product.prijs)).toFixed(2);
+                        totaal += parseFloat(prijs);
+
+                        div.innerHTML = `
+                            <img src="images/${product.afbeelding}" alt="${product.naam}">
+                            <h3>${product.naam}</h3>
+                            <p>${product.beschrijving}</p>
+                            <strong>€ ${product.prijs}</strong>
+                            <p>
+                                Aantal: <input type="number" value="${item.aantal}" min="1" data-id="${item.id}" class="aantal-input">
+                                <button onclick="verwijderProduct(${item.id})">Verwijder</button>
+                            </p>
+                        `;
+                        itemsContainer.appendChild(div);
+                    });
+
+                    totaalPrijsEl.textContent = totaal.toFixed(2);
+                });
+        }
+
+        function verwijderProduct(id) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            toonWinkelwagen();
+            bijwerkenWinkelwagenTeller();
+        }
+
+        document.getElementById("clear-cart").addEventListener("click", () => {
+            localStorage.removeItem("cart");
+            toonWinkelwagen();
+            bijwerkenWinkelwagenTeller();
+        });
+
+        document.getElementById("betaal-btn").addEventListener("click", () => {
+            alert("Bedankt voor uw bestelling!");
+            localStorage.removeItem("cart");
+            toonWinkelwagen();
+            bijwerkenWinkelwagenTeller();
+        });
+
+        document.addEventListener("input", function (e) {
+            if (e.target.classList.contains("aantal-input")) {
+                const id = parseInt(e.target.dataset.id);
+                const nieuweAantal = parseInt(e.target.value);
+
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                const index = cart.findIndex(p => p.id === id);
+                if (index !== -1 && nieuweAantal > 0) {
+                    cart[index].aantal = nieuweAantal;
+                }
+                localStorage.setItem("cart", JSON.stringify(cart));
+                toonWinkelwagen();
+                bijwerkenWinkelwagenTeller();
+            }
+        });
+
+        function bijwerkenWinkelwagenTeller() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const totaal = cart.reduce((sum, item) => sum + item.aantal, 0);
+            document.getElementById("cart-count").textContent = totaal;
+        }
+
+        function bijwerkenLoginStatus() {
+            const gebruiker = localStorage.getItem("gebruiker");
+            const loginLink = document.getElementById("login-link");
+            if (gebruiker) {
+                loginLink.textContent = "Uitloggen";
+                loginLink.href = "#";
+                loginLink.onclick = function () {
+                    localStorage.removeItem("gebruiker");
+                    alert("U bent uitgelogd.");
+                    location.reload();
+                };
+            } else {
+                loginLink.textContent = "Inloggen";
+                loginLink.href = "login.html";
+                loginLink.onclick = null;
+            }
+        }
+
+        toonWinkelwagen();
+        bijwerkenWinkelwagenTeller();
+        bijwerkenLoginStatus();
+    </script>
 </body>
 </html>
